@@ -21,12 +21,19 @@ program define preliminaries
     quietly {
 
         syntax , [matsize(string) maxvar(string) sortseed(string) linesize(string) loadglob(string) seed(string)]
+        
+        local se_or_better `c(SE)'==1
 
         if "`sortseed'"==""{
             local sortseed 47
         }
         if "`matsize'"==""{
-            local matsize 5000
+            if `se_or_better'{
+                local matsize 5000
+            }
+            else{
+                local matsize 800
+            }
         }
         if "`linesize'"==""{
             local linesize 255
@@ -45,9 +52,14 @@ program define preliminaries
         set varabbrev off
         set matsize `matsize'
         set linesize `linesize'
-        set maxvar `maxvar'
         set sortseed `sortseed'
         set seed `seed'
+        
+        if `se_or_better'{
+            set maxvar `maxvar'
+        }
+        
+
 
         if "`loadglob'"!=""{
             foreach globfile of local loadglob {
